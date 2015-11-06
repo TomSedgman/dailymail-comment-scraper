@@ -48,8 +48,7 @@ urlArticleList = "http://www.dailymail.co.uk/home/index.rss"
 # while done < maxTries:
 
 # Get the 'hottest' stories for comments
-dataStories = get_xml_as_json(urlArticleList)
-jsonDataStories = json.jsonLoads(dataStories)
+jsonDataStories = get_xml_as_json(urlArticleList)
 
 #print jsonDataStories 
 
