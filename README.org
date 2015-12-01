@@ -1,9 +1,9 @@
-* bottle.py Heroku-compatible app to return comments from Sky News
+* bottle.py Heroku-compatible app to return comments from the Daily Mail
   To push to heroku:
   : git push heroku master
 
 
-  The app returns one of the top rated comments from one of the 'hottest' stories on the news.sky.com. It also returns the story's title and the number of likes the comments receives.
+  The app returns one of the top rated comments from one of the stories on the Daily Mail's website. It also returns the story's title and the number of Likes/Dislikes the comments receives.
 
 * Installing development environment
   To install [[http://bottlepy.org/docs/dev/][Bottle framework]] into a
