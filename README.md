@@ -1,1 +1,0 @@
-# dailymail-comment-scraper
