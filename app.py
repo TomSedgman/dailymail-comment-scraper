@@ -94,7 +94,7 @@ def index():
       continue
 
     # Maximum Number of comments we want to get from the API
-    maxCommentNumber = str(50)
+    maxCommentNumber = str(20)
 
     # Build the URL to return the 'Best Rated' comments for the random story
     urlForComments = "http://www.dailymail.co.uk/reader-comments/p/asset/readcomments/"+storyID+"?max="+maxCommentNumber+"&sort=voteRating&order=desc&rcCache=shout"
