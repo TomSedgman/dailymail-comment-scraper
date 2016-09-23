@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import urllib2
 from os import environ as env
 from sys import argv
 
@@ -25,11 +26,13 @@ def index():
   import simplejson as json
   from random import randint
 
-  # Function to get json data from a url 
+  # Function to get json data from a url
   def get_jsonparsed_data(url):
 
       try:
-         response = urlopen(url)
+         req = urllib2.Request(url)
+         req.add_header('User-Agent', 'Mozilla/5.0')
+         response = urllib2.urlopen(req)
       except HTTPError, err:
          if err.code == 404:
              return "Page not found!"
@@ -43,7 +46,7 @@ def index():
       data = str(response.read())
       return json.loads(data);
 
-  # Function to get xml data as json from a url: 
+  # Function to get xml data as json from a url:
   def get_xml(request):
       file = urlopen(request)
       data = file.read()
@@ -51,13 +54,14 @@ def index():
 
       xmlData = xmltodict.parse(data)
       return xmlData
+      print xmlData
 
   # URL for Daily Mail's RSS feed:
   urlArticleList = "http://www.dailymail.co.uk/home/index.rss"
 
   # How many times to retry
   done = 0
-  maxTries = 50000
+  maxTries = 5
 
   while done < maxTries:
 
@@ -70,7 +74,7 @@ def index():
 
     except:
       done +=1
-      continue
+      pass
 
 
     # Pick random story
@@ -80,29 +84,32 @@ def index():
 
     except:
       done +=1
-      continue
+      pass
 
     # Get the Stpry ID and clean up the URL
-    try:  
+    try:
       storyURL = jsonDataStoriesLoaded["rss"]["channel"]["item"][storyNumber]["link"]
       shortStoryURL = storyURL.split('?', 1)[0]
-      storyIDAlmost = shortStoryURL.split('-', 1)[-1] 
+      storyIDAlmost = shortStoryURL.split('-', 1)[-1]
       storyID = storyIDAlmost.split('/', 1)[0]
 
     except:
       done +=1
-      continue
+      pass
 
     # Maximum Number of comments we want to get from the API
     maxCommentNumber = str(20)
+    print storyID
 
     # Build the URL to return the 'Best Rated' comments for the random story
-    urlForComments = "http://www.dailymail.co.uk/reader-comments/p/asset/readcomments/"+storyID+"?max="+maxCommentNumber+"&sort=voteRating&order=desc&rcCache=shout"
-
+    urlForComments = "http://www.dailymail.co.uk/reader-comments/p/asset/readcomments/"+storyID+"?max="+maxCommentNumber+"&sort=voteRating&order=desc"
+    print urlForComments
     # Get comment and metadata
     try:
       jsonDataComments = get_jsonparsed_data(urlForComments)
+      print jsonDataComments
       commentsNumber = len(jsonDataComments["payload"]["page"])
+      print commentsNumber
       randomCommentNumber = randint(0,(commentsNumber - 1))
       commentBody = jsonDataComments["payload"]["page"][randomCommentNumber]["message"]
       userName = jsonDataComments["payload"]["page"][randomCommentNumber]["userAlias"]
@@ -127,10 +134,9 @@ def index():
   if done == maxTries:
     errorString = "Sorry, They're busy killing kittens"
     return {"comment": errorString}
-    
+
   else:
   # Return the horrible comment
     return {"comment": filth , "storyTitle": shortStoryURL, "numberOfLikes": upVotes, "numberOfDislikes": downVotes}
 
 bottle.run(host='0.0.0.0', port=argv[1])
-
