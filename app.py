@@ -1,142 +1,147 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import os
-import urllib2
-from os import environ as env
+import urllib
+import urllib.error
+import urllib.request
+import urllib.parse
+from urllib.request import urlopen, Request
+from urllib.error import HTTPError, URLError
 from sys import argv
-
+import base64
+import re
+import lxml
+import xmltodict
+from lxml import objectify
+import simplejson as json
 import bottle
 from bottle import default_app, request, route, response, get
+from random import randint
 
 bottle.debug(True)
 
 @get('/')
 def index():
-  response.content_type = 'text/json; charset=utf-8'
-  try:
-      # For Python 3.0 and later
-      from urllib.request import urlopen
-      from urllib import HTTPError, URLError
-  except ImportError:
-      # Fall back to Python 2's urllib2
-      from urllib2 import urlopen, HTTPError, URLError
-  import base64, re, lxml, xmltodict
-  from lxml import objectify
-  import simplejson as json
-  from random import randint
+    response.content_type = 'text/json; charset=utf-8'
 
-  # Function to get json data from a url
-  def get_jsonparsed_data(url):
+    # Function to get json data from a url
+    def get_jsonparsed_data(url):
+        headers = {
+            "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36"}
+        req = urllib.request.Request(url, headers=headers)
+        try:
+            with urllib.request.urlopen(req) as response:
+                data = response.read()
+        except urllib.error.HTTPError as err:
+            print("The server failed to complete the request with error ")
+            print(err.code)
+        except urllib.error.URLError as err:
+            print('We failed to reach the server.')
+            print('Reason: ', err.reason)
 
-      try:
-         req = urllib2.Request(url)
-         req.add_header('User-Agent', 'Mozilla/5.0')
-         response = urllib2.urlopen(req)
-      except HTTPError, err:
-         if err.code == 404:
-             return "Page not found!"
-         elif err.code == 403:
-             return "Access denied!"
-         else:
-             return "Something happened! Error code", err.code
-      except URLError, err:
-          return "Some other error happened:", err.reason
+        returnedJson = json.loads(data)
+        return returnedJson
 
-      data = str(response.read())
-      return json.loads(data);
+    # Function to get xml data as json from a url:
+    def get_xml(request):
 
-  # Function to get xml data as json from a url:
-  def get_xml(request):
-      file = urlopen(request)
-      data = file.read()
-      file.close()
+        req = urllib.request.Request(request)
+        try:
+            with urllib.request.urlopen(req) as response:
+                data = response.read()
+        except urllib.error.URLError as err:
+            print ("Couldn't reach the Daily Mail's RSS feed")
+            print(err.reason)
+        except urllib.error.HTTPError as err:
+            print("The server failed to complete the request with error ")
+            print(err.code)
+        xmlData = xmltodict.parse(data)
+        return xmlData
 
-      xmlData = xmltodict.parse(data)
-      return xmlData
-      print xmlData
+    # URL for Daily Mail's RSS feed:
+    urlArticleList = "http://www.dailymail.co.uk/home/index.rss"
 
-  # URL for Daily Mail's RSS feed:
-  urlArticleList = "http://www.dailymail.co.uk/home/index.rss"
+    # How many times to retry
+    done = 0
+    maxTries = 5
 
-  # How many times to retry
-  done = 0
-  maxTries = 5
+    while done < maxTries:
 
-  while done < maxTries:
+        # Get all stories from the rss feed
+        try:
+            xmlDataStories = get_xml(urlArticleList)
+            jsonDataStories = json.dumps(xmlDataStories)
+            jsonDataStoriesLoaded = json.loads(jsonDataStories)
 
-    # Get all stories from the rss feed
-    try:
+        except:
+            done += 1
 
-      xmlDataStories = get_xml(urlArticleList)
-      jsonDataStories = json.dumps(xmlDataStories)
-      jsonDataStoriesLoaded = json.loads(jsonDataStories)
+        # Pick random story
+        try:
+            storiesNumber = len(
+                jsonDataStoriesLoaded["rss"]["channel"]["item"])
+            storyNumber = randint(0, (storiesNumber - 1))
 
-    except:
-      done +=1
-      pass
+        except:
+            done += 1
 
+        # Get the Stpry ID and clean up the URL
+        try:
+            storyURL = jsonDataStoriesLoaded["rss"]["channel"]["item"][storyNumber]["link"]
+            shortStoryURL = storyURL.split('?', 1)[0]
+            storyIDAlmost = shortStoryURL.split('-', 1)[-1]
+            storyID = storyIDAlmost.split('/', 1)[0]
 
-    # Pick random story
-    try:
-      storiesNumber = len(jsonDataStoriesLoaded["rss"]["channel"]["item"])
-      storyNumber = randint(0,(storiesNumber - 1))
+        except:
+            done += 1
 
-    except:
-      done +=1
-      pass
+        # Maximum Number of comments we want to get from the API
+        maxCommentNumber = str(20)
 
-    # Get the Stpry ID and clean up the URL
-    try:
-      storyURL = jsonDataStoriesLoaded["rss"]["channel"]["item"][storyNumber]["link"]
-      shortStoryURL = storyURL.split('?', 1)[0]
-      storyIDAlmost = shortStoryURL.split('-', 1)[-1]
-      storyID = storyIDAlmost.split('/', 1)[0]
+        # Build the URL to return the 'Best Rated' comments for the random story
+        try:
+            urlForComments = "http://www.dailymail.co.uk/reader-comments/p/asset/readcomments/" + \
+                storyID+"?max="+maxCommentNumber+"&sort=voteRating&order=desc"
+        except:
+            done += 1
 
-    except:
-      done +=1
-      pass
+        # Get comment and metadata
+        try:
+            jsonDataComments = get_jsonparsed_data(urlForComments)
+            commentsNumber = len(jsonDataComments["payload"]["page"])
+            randomCommentNumber = randint(0, (commentsNumber - 1))
+            commentBody = jsonDataComments["payload"]["page"][randomCommentNumber]["message"]
+            userName = jsonDataComments["payload"]["page"][randomCommentNumber]["userAlias"]
+            downVotes = int((jsonDataComments["payload"]["page"][randomCommentNumber]["voteCount"] -
+                             jsonDataComments["payload"]["page"][randomCommentNumber]["voteRating"]) * 0.5)
+            upVotes = int(jsonDataComments["payload"]["page"]
+                          [randomCommentNumber]["voteRating"] + downVotes)
 
-    # Maximum Number of comments we want to get from the API
-    maxCommentNumber = str(20)
-    print storyID
+        except:
+            done += 1
+            continue
 
-    # Build the URL to return the 'Best Rated' comments for the random story
-    urlForComments = "http://www.dailymail.co.uk/reader-comments/p/asset/readcomments/"+storyID+"?max="+maxCommentNumber+"&sort=voteRating&order=desc"
-    print urlForComments
-    # Get comment and metadata
-    try:
-      jsonDataComments = get_jsonparsed_data(urlForComments)
-      print jsonDataComments
-      commentsNumber = len(jsonDataComments["payload"]["page"])
-      print commentsNumber
-      randomCommentNumber = randint(0,(commentsNumber - 1))
-      commentBody = jsonDataComments["payload"]["page"][randomCommentNumber]["message"]
-      userName = jsonDataComments["payload"]["page"][randomCommentNumber]["userAlias"]
-      downVotes = int((jsonDataComments["payload"]["page"][randomCommentNumber]["voteCount"] - jsonDataComments["payload"]["page"][randomCommentNumber]["voteRating"]) * 0.5)
-      upVotes = int(jsonDataComments["payload"]["page"][randomCommentNumber]["voteRating"] + downVotes)
+        # Strip out html tags
+        def cleanhtml(raw_html):
 
-    except:
-      done +=1
-      continue
+            cleanr = re.compile('<.*?>')
+            cleantext = re.sub(cleanr, '', raw_html)
+            return cleantext
 
-    # Strip out html tags
-    def cleanhtml(raw_html):
+        try:
+            filth = cleanhtml(commentBody)+" - "+userName
+        except:
+            print ("Error parsing contet")
+            done += 1
+            continue
+        break
 
-      cleanr =re.compile('<.*?>')
-      cleantext = re.sub(cleanr,'', raw_html)
-      return cleantext;
+    if done == maxTries:
+        errorString = "Sorry, no comments - they're busy killing kittens"
+        return {"comment": errorString}
 
-    filth = cleanhtml(commentBody)+" - "+userName
+    else:
+        # Return the horrible comment
+        return {"comment": filth, "storyTitle": shortStoryURL, "numberOfLikes": upVotes, "numberOfDislikes": downVotes}
 
-    break
-
-  if done == maxTries:
-    errorString = "Sorry, no comments - they're busy killing kittens"
-    return {"comment": errorString}
-
-  else:
-  # Return the horrible comment
-    return {"comment": filth , "storyTitle": shortStoryURL, "numberOfLikes": upVotes, "numberOfDislikes": downVotes}
-
-bottle.run(host='0.0.0.0', port=argv[1])
+bottle.run(host='0.0.0.0', port=argv[1], reloader=True)
