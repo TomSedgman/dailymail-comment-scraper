@@ -1,5 +1,9 @@
-bottle
-lxml
-xmltodict
-simplejson
-urllib
+autoflake==1.4
+autopep8==1.5.4
+bottle==0.12.19
+lxml==4.6.2
+pycodestyle==2.6.0
+pyflakes==2.2.0
+simplejson==3.17.2
+toml==0.10.2
+xmltodict==0.12.0
