@@ -96,7 +96,7 @@ def index():
             done += 1
 
         # Maximum Number of comments we want to get from the API
-        maxCommentNumber = str(200)
+        maxCommentNumber = str(20)
 
         # Build the URL to return the 'Best Rated' comments for the random story
         try:
