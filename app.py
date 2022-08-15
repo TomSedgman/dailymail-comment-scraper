@@ -12,6 +12,7 @@ import base64
 import re
 import lxml
 import xmltodict
+import requests
 from lxml import objectify
 import simplejson as json
 import bottle
@@ -22,6 +23,7 @@ bottle.debug(True)
 
 @get('/')
 def index():
+    
     response.content_type = 'text/json; charset=utf-8'
 
     # Function to get json data from a url
@@ -59,6 +61,7 @@ def index():
         return xmlData
 
     # URL for Daily Mail's RSS feed:
+    data_source = requests.get('https://mailscrapertest1.herokuapp.com/', params=payload)
     urlArticleList = "http://www.dailymail.co.uk/home/index.rss"
 
     # How many times to retry
@@ -141,7 +144,7 @@ def index():
         break
 
     if done == maxTries:
-        errorString = "Sorry, no comments - they're busy killing kittens" + request.GET
+        errorString = "Sorry, no comments - they're busy killing kittens" +  data_source
         return {"comment": errorString}
 
     else:
