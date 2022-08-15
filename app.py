@@ -144,7 +144,7 @@ def index():
         break
 
     if done == maxTries:
-        errorString = "Sorry, no comments - they're busy killing kittens" +  data_source.article
+        errorString = "Sorry, no comments - they're busy killing kittens" +  data_source
         return {"comment": errorString}
 
     else:
