@@ -4,7 +4,7 @@
 import urllib
 import urllib.error
 import urllib.request
-import urllib.parse
+from urllib.parse import urlparse
 from urllib.request import urlopen, Request
 from urllib.error import HTTPError, URLError
 from sys import argv
