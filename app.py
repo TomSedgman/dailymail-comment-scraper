@@ -63,7 +63,7 @@ def index():
 
     # How many times to retry
     done = 0
-    maxTries = 5
+    maxTries = 10
 
     while done < maxTries:
 
