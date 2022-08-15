@@ -141,7 +141,7 @@ def index():
         break
 
     if done == maxTries:
-        errorString = "Sorry, no comments - they're busy killing kittens"
+        errorString = "Sorry, no comments - they're busy killing kittens" + request.GET
         return {"comment": errorString}
 
     else:
