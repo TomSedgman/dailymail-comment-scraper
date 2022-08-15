@@ -5,7 +5,7 @@ mods made by me
   : git push heroku master
 
 
-  The app returns one of the top rated comments from one of the stories on the Daily Mail's website. It also returns the story's title and the number of Likes/Dislikes the comments receives.
+  The app is intended to return all of the comments from a single daily mail URL. bous points for the number of Likes/Dislikes the comments receives.
 
 * Installing development environment
   To install [[http://bottlepy.org/docs/dev/][Bottle framework]] into a
@@ -27,6 +27,8 @@ mods made by me
   Copyright (C) 2011 by Atte Hinkka
   
   Copyright (C) 2015 by Aaron Ford
+
+  modifications made by me
   
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal: 
