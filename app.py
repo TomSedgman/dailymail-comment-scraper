@@ -63,7 +63,7 @@ def index():
 
     # How many times to retry
     done = 0
-    maxTries = 10
+    maxTries = 5
 
     while done < maxTries:
 
@@ -96,7 +96,7 @@ def index():
             done += 1
 
         # Maximum Number of comments we want to get from the API
-        maxCommentNumber = str(20)
+        maxCommentNumber = str(200)
 
         # Build the URL to return the 'Best Rated' comments for the random story
         try:
