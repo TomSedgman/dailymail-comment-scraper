@@ -4,7 +4,7 @@
 import urllib
 import urllib.error
 import urllib.request
-from urllib.parse import urlparse
+import urllib.parse 
 from urllib.request import urlopen, Request
 from urllib.error import HTTPError, URLError
 from sys import argv
@@ -18,6 +18,7 @@ import simplejson as json
 import bottle
 from bottle import default_app, request, route, response, get
 from random import randint
+import os
 
 bottle.debug(True)
 
@@ -61,7 +62,7 @@ def index():
         return xmlData
 
     # URL for Daily Mail's RSS feed:
-    data_source = urlparse(self.request.url)
+    data_source = os.environ['REQUEST_URI']
     return (data_source)
     urlArticleList = "http://www.dailymail.co.uk/home/index.rss"
 
