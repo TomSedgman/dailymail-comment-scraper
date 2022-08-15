@@ -12,6 +12,7 @@ import base64
 import re
 import lxml
 import xmltodict
+import requests
 from lxml import objectify
 import simplejson as json
 import bottle
@@ -60,7 +61,7 @@ def index():
         return xmlData
 
     # URL for Daily Mail's RSS feed:
-    data_source = requests.get('https://mailscrapertest1.herokuapp.com/', params=payload)
+    data_source = request.GET.urlencode()
     urlArticleList = "http://www.dailymail.co.uk/home/index.rss"
 
     # How many times to retry
@@ -143,7 +144,7 @@ def index():
         break
 
     if done == maxTries:
-        errorString = "Sorry, no comments - they're busy killing kittens" +  data_source
+        errorString = "Sorry, no comments - they're busy killing kittens" +  data_source.article
         return {"comment": errorString}
 
     else:
