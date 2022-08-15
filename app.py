@@ -62,7 +62,7 @@ def index():
         return xmlData
 
     # URL for Daily Mail's RSS feed:
-    data_source = os.environ['REQUEST_URI']
+    data_source = os.environ.get('article')
     urlArticleList = "http://www.dailymail.co.uk/home/index.rss"
 
     # How many times to retry
