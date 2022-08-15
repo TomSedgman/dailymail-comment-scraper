@@ -12,7 +12,6 @@ import base64
 import re
 import lxml
 import xmltodict
-import requests
 from lxml import objectify
 import simplejson as json
 import bottle
