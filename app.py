@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-from tkinter import E
 import urllib
 import urllib.error
 import urllib.request
