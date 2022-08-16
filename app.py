@@ -78,9 +78,10 @@ def index():
 
         # Pick random story
         try:
-            storiesNumber = len(
-                jsonDataStoriesLoaded["rss"]["channel"]["item"])
-            storyNumber = randint(0, (storiesNumber - 1))
+            # storiesNumber = len(
+            #     jsonDataStoriesLoaded["rss"]["channel"]["item"])
+            # storyNumber = randint(0, (storiesNumber - 1))
+            storyNumber = request.query_string
 
         except:
             done += 1
