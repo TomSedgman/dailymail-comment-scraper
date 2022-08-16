@@ -5,7 +5,7 @@ import urllib
 import urllib.error
 import urllib.request
 import urllib.parse 
-from urllib.parse import urlparse
+from urllib.parse import parse_qs, urlparse
 from urllib.request import urlopen, Request
 from urllib.error import HTTPError, URLError
 from sys import argv
@@ -63,7 +63,7 @@ def index():
         return xmlData
 
     # URL for Daily Mail's RSS feed:
-    data_source = urllib.parse(os.environ.get('QUERY_STRING', ''))
+    data_source = parse_qs(os.environ.get('QUERY_STRING', ''))
     urlArticleList = "http://www.dailymail.co.uk/home/index.rss"
 
     # How many times to retry
