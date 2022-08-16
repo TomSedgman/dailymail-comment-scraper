@@ -86,7 +86,7 @@ def index():
             storiesNumber = len(
                 jsonDataStoriesLoaded["rss"]["channel"]["item"])
             storyNumber = randint(0, (storiesNumber - 1))
-            # data_source = request.query_string
+            data_source = request.query_string
 
 
         except:
@@ -99,7 +99,7 @@ def index():
             shortStoryURL = storyURL.split('?', 1)[0]
             storyIDAlmost = shortStoryURL.split('-', 1)[-1]
             storyID = storyIDAlmost.split('/', 1)[0]
-            
+            return data_source
         except:
             done += 1
 
