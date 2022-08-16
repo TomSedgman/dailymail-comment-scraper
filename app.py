@@ -99,7 +99,7 @@ def index():
             shortStoryURL = storyURL.split('?', 1)[0]
             storyIDAlmost = shortStoryURL.split('-', 1)[-1]
             storyID = storyIDAlmost.split('/', 1)[0]
-            return {"comment": storyURL}
+            
         except:
             done += 1
 
@@ -156,6 +156,7 @@ def index():
 
     else:
         # Return the horrible comment
-        return {"comment": 'filth', "storyTitle": shortStoryURL, "numberOfLikes": upVotes, "numberOfDislikes": downVotes}
+        return {"comment": storyURL}
+        # return {"comment": filth, "storyTitle": shortStoryURL, "numberOfLikes": upVotes, "numberOfDislikes": downVotes}
 
 bottle.run(host='0.0.0.0', port=argv[1], reloader=True)
