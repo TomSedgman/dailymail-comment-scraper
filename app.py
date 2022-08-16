@@ -99,7 +99,7 @@ def index():
             shortStoryURL = storyURL.split('?', 1)[0]
             storyIDAlmost = shortStoryURL.split('-', 1)[-1]
             storyID = storyIDAlmost.split('/', 1)[0]
-            return data_source
+            return {"comment": storyURL}
         except:
             done += 1
 
