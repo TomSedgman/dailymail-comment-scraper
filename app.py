@@ -64,7 +64,6 @@ def index():
         return xmlData
 
     # URL for Daily Mail's RSS feed:
-    data_source = request.query_string
     urlArticleList = "http://www.dailymail.co.uk/home/index.rss"
 
     # How many times to retry
@@ -87,13 +86,16 @@ def index():
             storiesNumber = len(
                 jsonDataStoriesLoaded["rss"]["channel"]["item"])
             storyNumber = randint(0, (storiesNumber - 1))
+            # data_source = request.query_string
+
 
         except:
             done += 1
 
         # Get the Stpry ID and clean up the URL
         try:
-            storyURL = jsonDataStoriesLoaded["rss"]["channel"]["item"][data_source]["link"]
+            
+            storyURL = jsonDataStoriesLoaded["rss"]["channel"]["item"][storyNumber]["link"]
             shortStoryURL = storyURL.split('?', 1)[0]
             storyIDAlmost = shortStoryURL.split('-', 1)[-1]
             storyID = storyIDAlmost.split('/', 1)[0]
