@@ -65,7 +65,7 @@ def index():
 
     # URL for Daily Mail's RSS feed:
     data_source = request.query_string
-    urlArticleList = "http://www.dailymail.co.uk/home/index.rss"
+    urlArticleList = "http://www.dailymail.co.uk/news/article-"+str(data_source)
 
     # How many times to retry
     done = 0
@@ -147,8 +147,8 @@ def index():
         break
 
     if done == maxTries:
-        # errorString = "Sorry, no comments - they're busy killing kittens"
-        errorString =  data_source
+        errorString = "Sorry, no comments - they're busy killing kittens"
+        # errorString =  data_source
     
         return {"comment": errorString}
 
