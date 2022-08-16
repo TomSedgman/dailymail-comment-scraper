@@ -147,7 +147,7 @@ def index():
 
     if done == maxTries:
         # errorString = "Sorry, no comments - they're busy killing kittens"
-        errorString =  json.JSONDecoder.decode(data_source)
+        errorString =  data_source
     
         return {"comment": errorString}
 
