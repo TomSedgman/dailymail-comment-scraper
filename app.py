@@ -91,16 +91,16 @@ def index():
 
             commentsNumber = len(jsonDataComments["payload"]["page"])
             randomCommentNumber = 0
-            while randomCommentNumber < commentsNumber
+            while randomCommentNumber < commentsNumber:
+
+                commentBody = jsonDataComments["payload"]["page"][randomCommentNumber]["message"]
+                userName = jsonDataComments["payload"]["page"][randomCommentNumber]["userAlias"]
+                downVotes = int((jsonDataComments["payload"]["page"][randomCommentNumber]["voteCount"] -
+                                jsonDataComments["payload"]["page"][randomCommentNumber]["voteRating"]) * 0.5)
+                upVotes = int(jsonDataComments["payload"]["page"]
+                            [randomCommentNumber]["voteRating"] + downVotes)
             
-            commentBody = jsonDataComments["payload"]["page"][randomCommentNumber]["message"]
-            userName = jsonDataComments["payload"]["page"][randomCommentNumber]["userAlias"]
-            downVotes = int((jsonDataComments["payload"]["page"][randomCommentNumber]["voteCount"] -
-                             jsonDataComments["payload"]["page"][randomCommentNumber]["voteRating"]) * 0.5)
-            upVotes = int(jsonDataComments["payload"]["page"]
-                          [randomCommentNumber]["voteRating"] + downVotes)
-            
-            randomCommentNumber +=1
+                randomCommentNumber +=1
         except:
             done += 1
             continue
