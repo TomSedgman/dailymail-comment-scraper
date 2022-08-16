@@ -147,7 +147,7 @@ def index():
 
     if done == maxTries:
         # errorString = "Sorry, no comments - they're busy killing kittens"
-        errorString =  type(data_source.query)
+        errorString =  str(data_source.query)
     
         return {"comment": errorString}
 
