@@ -86,38 +86,32 @@ def index():
         # Get comment and metadata
         try:
             jsonDataComments = get_jsonparsed_data(urlForComments)
-            shortStoryURL=jsonDataComments["payload"]["page"][0]["assetHeadline"]
-            output = ''
             commentsNumber = len(jsonDataComments["payload"]["page"])
-            randomCommentNumber = 0
-            while randomCommentNumber < commentsNumber:
-
-                output[randomCommentNumber].commentBody = jsonDataComments["payload"]["page"][randomCommentNumber]["message"]
-                output[randomCommentNumber].userName = jsonDataComments["payload"]["page"][randomCommentNumber]["userAlias"]
-                output[randomCommentNumber].downVotes = int((jsonDataComments["payload"]["page"][randomCommentNumber]["voteCount"] -
-                                jsonDataComments["payload"]["page"][randomCommentNumber]["voteRating"]) * 0.5)
-                output[randomCommentNumber].upVotes = int(jsonDataComments["payload"]["page"]
-                            [randomCommentNumber]["voteRating"] + output[randomCommentNumber].downVotes)
-            
-                randomCommentNumber +=1
+            randomCommentNumber = randint(0, (commentsNumber - 1))
+            commentBody = jsonDataComments["payload"]["page"][randomCommentNumber]["message"]
+            userName = jsonDataComments["payload"]["page"][randomCommentNumber]["userAlias"]
+            downVotes = int((jsonDataComments["payload"]["page"][randomCommentNumber]["voteCount"] -
+                             jsonDataComments["payload"]["page"][randomCommentNumber]["voteRating"]) * 0.5)
+            upVotes = int(jsonDataComments["payload"]["page"]
+                          [randomCommentNumber]["voteRating"] + downVotes)
         except:
             done += 1
             continue
 
-        # # Strip out html tags
-        # def cleanhtml(raw_html):
+        # Strip out html tags
+        def cleanhtml(raw_html):
 
-        #     cleanr = re.compile('<.*?>')
-        #     cleantext = re.sub(cleanr, '', raw_html)
-        #     return cleantext
+            cleanr = re.compile('<.*?>')
+            cleantext = re.sub(cleanr, '', raw_html)
+            return cleantext
 
-        # try:
-        #     filth = cleanhtml(commentBody)+" - "+userName
-        # except:
-        #     print ("Error parsing contet")
-        #     done += 1
-        #     continue
-        # break
+        try:
+            filth = cleanhtml(commentBody)+" - "+userName
+        except:
+            print ("Error parsing contet")
+            done += 1
+            continue
+        break
 
     if done == maxTries:
         errorString = "Sorry, no comments - they're busy killing kittens"
@@ -125,6 +119,7 @@ def index():
 
     else:
         # Return the horrible comment
-        return {"storyTitle": shortStoryURL, "output": output}
+        return {"page":jsonDataComments}
+        # return {"storyTitle": shortStoryURL, "": userName, "comment": filth, "numberOfLikes": upVotes, "numberOfDislikes": downVotes}
 
 bottle.run(host='0.0.0.0', port=argv[1], reloader=True)
