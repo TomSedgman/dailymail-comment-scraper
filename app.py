@@ -21,6 +21,7 @@ from bottle import default_app, request, route, response, get
 from random import randint
 import os
 
+
 bottle.debug(True)
 
 @get('/')
@@ -63,7 +64,7 @@ def index():
         return xmlData
 
     # URL for Daily Mail's RSS feed:
-    data_source = request.META.get('PATH_INFO')
+    data_source = request.query_string
     urlArticleList = "http://www.dailymail.co.uk/home/index.rss"
 
     # How many times to retry
