@@ -95,7 +95,7 @@ def index():
         # Get the Stpry ID and clean up the URL
         try:
             
-            storyURL = jsonDataStoriesLoaded["rss"]["channel"]["item"][data_source]["link"]
+            storyURL = jsonDataStoriesLoaded["rss"]["channel"]["item"][storyNumber]["link"]
             shortStoryURL = storyURL.split('?', 1)[0]
             storyIDAlmost = shortStoryURL.split('-', 1)[-1]
             storyID = storyIDAlmost.split('/', 1)[0]
@@ -156,7 +156,6 @@ def index():
 
     else:
         # Return the horrible comment
-        return {"comment": storyURL}
-        # return {"comment": filth, "storyTitle": shortStoryURL, "numberOfLikes": upVotes, "numberOfDislikes": downVotes}
+        return {"comment": filth, "storyTitle": shortStoryURL, "numberOfLikes": upVotes, "numberOfDislikes": downVotes}
 
 bottle.run(host='0.0.0.0', port=argv[1], reloader=True)
