@@ -148,7 +148,7 @@ def index():
 
     if done == maxTries:
         # errorString = "Sorry, no comments - they're busy killing kittens"
-        errorString =  dict(data_source)
+        errorString =  data_source
     
         return {"comment": errorString}
 
