@@ -101,7 +101,7 @@ def index():
 
         except:
             done += 1
-            # return {"URL": storyURL}
+            return {"URL": jsonDataStoriesLoaded}
 
         # Maximum Number of comments we want to get from the API
         maxCommentNumber = str(20)
@@ -150,8 +150,6 @@ def index():
 
     if done == maxTries:
         errorString = "Sorry, no comments - they're busy killing kittens"
-        # errorString =  data_source
-    
         return {"comment": errorString}
 
     else:
