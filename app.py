@@ -64,7 +64,7 @@ def index():
         return xmlData
 
     # URL for Daily Mail's RSS feed:
-    query_article = request.query_string
+    data_source = request.query_string
     urlArticleList = "http://www.dailymail.co.uk/home/index.rss"
 
     # How many times to retry
@@ -83,25 +83,23 @@ def index():
             done += 1
 
         # Pick random story
-        # try:
-            # storiesNumber = len(
-            #     jsonDataStoriesLoaded["rss"]["channel"]["item"])
+        try:
+            storiesNumber = len(
+                jsonDataStoriesLoaded["rss"]["channel"]["item"])
+            storyNumber = randint(0, (storiesNumber - 1))
 
-            # storyNumber = randint(0, (storiesNumber - 1))
-
-        # except:
-        #     done += 1
+        except:
+            done += 1
 
         # Get the Stpry ID and clean up the URL
         try:
-            storyURL = jsonDataStoriesLoaded["rss"]["channel"]["item"][query_article]["link"]
+            storyURL = jsonDataStoriesLoaded["rss"]["channel"]["item"][storyNumber]["link"]
             shortStoryURL = storyURL.split('?', 1)[0]
             storyIDAlmost = shortStoryURL.split('-', 1)[-1]
             storyID = storyIDAlmost.split('/', 1)[0]
 
         except:
             done += 1
-            return {"URL": jsonDataStoriesLoaded}
 
         # Maximum Number of comments we want to get from the API
         maxCommentNumber = str(20)
@@ -150,6 +148,8 @@ def index():
 
     if done == maxTries:
         errorString = "Sorry, no comments - they're busy killing kittens"
+        # errorString =  data_source
+    
         return {"comment": errorString}
 
     else:
