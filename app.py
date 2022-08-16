@@ -93,11 +93,11 @@ def index():
 
         # Get the Stpry ID and clean up the URL
         try:
-            storyURL = jsonDataStoriesLoaded["rss"]["channel"]["item"][storyNumber]["link"]
+            storyURL = jsonDataStoriesLoaded["rss"]["channel"]["item"][data_source]["link"]
             shortStoryURL = storyURL.split('?', 1)[0]
             storyIDAlmost = shortStoryURL.split('-', 1)[-1]
             storyID = storyIDAlmost.split('/', 1)[0]
-
+            return {'URL': storyURL}
         except:
             done += 1
 
