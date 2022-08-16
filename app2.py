@@ -4,7 +4,8 @@
 import urllib
 import urllib.error
 import urllib.request
-import urllib.parse
+import urllib.parse 
+from urllib.parse import parse_qs, urlparse
 from urllib.request import urlopen, Request
 from urllib.error import HTTPError, URLError
 from sys import argv
@@ -12,16 +13,20 @@ import base64
 import re
 import lxml
 import xmltodict
+import requests
 from lxml import objectify
 import simplejson as json
 import bottle
 from bottle import default_app, request, route, response, get
 from random import randint
+import os
+
 
 bottle.debug(True)
 
 @get('/')
 def index():
+    
     response.content_type = 'text/json; charset=utf-8'
 
     # Function to get json data from a url
@@ -81,17 +86,20 @@ def index():
             storiesNumber = len(
                 jsonDataStoriesLoaded["rss"]["channel"]["item"])
             storyNumber = randint(0, (storiesNumber - 1))
+            data_source = request.query_string
+
 
         except:
             done += 1
 
         # Get the Stpry ID and clean up the URL
         try:
+            
             storyURL = jsonDataStoriesLoaded["rss"]["channel"]["item"][storyNumber]["link"]
             shortStoryURL = storyURL.split('?', 1)[0]
             storyIDAlmost = shortStoryURL.split('-', 1)[-1]
             storyID = storyIDAlmost.split('/', 1)[0]
-
+            
         except:
             done += 1
 
@@ -107,15 +115,19 @@ def index():
 
         # Get comment and metadata
         try:
-            jsonDataComments = get_jsonparsed_data(urlForComments)
+            randomCommentNumber = 0
             commentsNumber = len(jsonDataComments["payload"]["page"])
-            randomCommentNumber = randint(0, (commentsNumber - 1))
-            commentBody = jsonDataComments["payload"]["page"][randomCommentNumber]["message"]
-            userName = jsonDataComments["payload"]["page"][randomCommentNumber]["userAlias"]
-            downVotes = int((jsonDataComments["payload"]["page"][randomCommentNumber]["voteCount"] -
-                             jsonDataComments["payload"]["page"][randomCommentNumber]["voteRating"]) * 0.5)
-            upVotes = int(jsonDataComments["payload"]["page"]
-                          [randomCommentNumber]["voteRating"] + downVotes)
+            while randomCommentNumber < commentsNumber: 
+                jsonDataComments = get_jsonparsed_data(urlForComments)
+                # commentsNumber = len(jsonDataComments["payload"]["page"])
+                # randomCommentNumber = randint(0, (commentsNumber - 1))
+                commentBody = jsonDataComments["payload"]["page"][randomCommentNumber]["message"]
+                userName = jsonDataComments["payload"]["page"][randomCommentNumber]["userAlias"]
+                downVotes = int((jsonDataComments["payload"]["page"][randomCommentNumber]["voteCount"] -
+                                jsonDataComments["payload"]["page"][randomCommentNumber]["voteRating"]) * 0.5)
+                upVotes = int(jsonDataComments["payload"]["page"]
+                            [randomCommentNumber]["voteRating"] + downVotes)
+                commentsNumber+1
 
         except:
             done += 1
@@ -138,6 +150,8 @@ def index():
 
     if done == maxTries:
         errorString = "Sorry, no comments - they're busy killing kittens"
+        # errorString =  data_source
+    
         return {"comment": errorString}
 
     else:
