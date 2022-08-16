@@ -65,7 +65,7 @@ def index():
 
     # URL for Daily Mail's RSS feed:
     data_source = request.query_string
-    urlArticleList = "http://www.dailymail.co.uk/news/article-"+str(data_source)
+    urlArticleList = "http://www.dailymail.co.uk/home/index.rss"
 
     # How many times to retry
     done = 0
@@ -86,7 +86,8 @@ def index():
         try:
             storiesNumber = len(
                 jsonDataStoriesLoaded["rss"]["channel"]["item"])
-            storyNumber = randint(0, (storiesNumber - 1))
+            storyNumber = data_source
+            # storyNumber = randint(0, (storiesNumber - 1))
 
         except:
             done += 1
