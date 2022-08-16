@@ -101,6 +101,7 @@ def index():
 
         except:
             done += 1
+            return {"URL": storyURL}
 
         # Maximum Number of comments we want to get from the API
         maxCommentNumber = str(20)
