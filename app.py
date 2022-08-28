@@ -108,6 +108,10 @@ def index():
         # Get comment and metadata
         try:
             jsonDataComments = get_jsonparsed_data(urlForComments)
+            output = {
+                "Title": jsonDataComments["payload"]["page"][0]["assetHeadline"],
+                # "Comment "+randomCommentNumber+1: comment                
+            }
             commentsNumber = len(jsonDataComments["payload"]["page"])
             randomCommentNumber = randint(0, (commentsNumber - 1))
             commentBody = jsonDataComments["payload"]["page"][randomCommentNumber]["message"]
@@ -142,6 +146,6 @@ def index():
 
     else:
         # Return the horrible comment
-        return {"comment": jsonDataComments}
+        return output
 
 bottle.run(host='0.0.0.0', port=argv[1], reloader=True)
