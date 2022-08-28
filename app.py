@@ -133,9 +133,7 @@ def index():
             randomCommentNumber = randint(0, (commentsNumber - 1))
             commentBody = jsonDataComments["payload"]["page"][randomCommentNumber]["message"]
             userName = jsonDataComments["payload"]["page"][randomCommentNumber]["userAlias"]
-            downVotes = int((jsonDataComments["payload"]["page"][randomCommentNumber]["voteCount"] -
-                             jsonDataComments["payload"]["page"][randomCommentNumber]["voteRating"]) * 0.5)
-
+            
         except:
             done += 1
             continue
