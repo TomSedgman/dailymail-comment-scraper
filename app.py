@@ -118,7 +118,7 @@ def index():
                     "Upvotes": int(jsonDataComments["payload"]["page"][randomCommentNumber]["voteRating"] + downVotes),
                     "Downvotes": downVotes,
                     "Published": jsonDataComments["payload"]["page"][randomCommentNumber]["dateCreated"],
-                    "Comment": randomCommentNumber+1 + " of " + commentsNumber
+                    "Comment": randomCommentNumber + " of " + commentsNumber
                 }
             output = {
                 "Title": jsonDataComments["payload"]["page"][0]["assetHeadline"],
