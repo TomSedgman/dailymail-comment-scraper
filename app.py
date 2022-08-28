@@ -24,7 +24,7 @@ bottle.debug(True)
 def index():
     response.content_type = 'text/json; charset=utf-8'
 
-    # Function to get json data from a url
+# Function to get json data from a url
     def get_jsonparsed_data(url):
         headers = {
             "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.97 Safari/537.36"}
@@ -42,48 +42,16 @@ def index():
         returnedJson = json.loads(data)
         return returnedJson
 
-    # Function to get xml data as json from a url:
-    def get_xml(request):
-
-        req = urllib.request.Request(request)
-        try:
-            with urllib.request.urlopen(req) as response:
-                data = response.read()
-        except urllib.error.URLError as err:
-            print ("Couldn't reach the Daily Mail's RSS feed")
-            print(err.reason)
-        except urllib.error.HTTPError as err:
-            print("The server failed to complete the request with error ")
-            print(err.code)
-        xmlData = xmltodict.parse(data)
-        return xmlData
-
-    # URL for Daily Mail's RSS feed:
-    urlArticleList = "http://www.dailymail.co.uk/home/index.rss"
-
     # How many times to retry
     done = 0
     maxTries = 5
 
     while done < maxTries:
-
-        # Get all stories from the rss feed
-        try:
-            xmlDataStories = get_xml(urlArticleList)
-            jsonDataStories = json.dumps(xmlDataStories)
-            jsonDataStoriesLoaded = json.loads(jsonDataStories)
-
-        except:
-            done += 1
-
-
-        # Build the URL to return the 'Best Rated' comments for the random story
         try:
             urlForComments = "http://www.dailymail.co.uk/reader-comments/p/asset/readcomments/"+request.query_string+"?max=1000&sort=voteRating&order=desc"
         except:
             done += 1
-
-        # Get comment and metadata
+        # Build custom json object
         try:
             jsonDataComments = get_jsonparsed_data(urlForComments)
             commentsNumber = len(jsonDataComments["payload"]["page"])
@@ -119,21 +87,7 @@ def index():
             done += 1
             continue
 
-        # Strip out html tags
-        # def cleanhtml(raw_html):
-
-        #     cleanr = re.compile('<.*?>')
-        #     cleantext = re.sub(cleanr, '', raw_html)
-        #     return cleantext
-
-        # try:
-        #     filth = cleanhtml(commentBody)+" - "+userName
-        # except:
-        #     print ("Error parsing contet")
-        #     done += 1
-        #     continue
-        # break
-
+        
     if done == maxTries:
         errorString = "Sorry, no comments - they're busy killing kittens"
         return {"comment": errorString}
@@ -141,6 +95,5 @@ def index():
     else:
         # Return the horrible comment
         return json.dumps(output)
-        # return {"storyTitle": shortStoryURL, "": userName, "comment": filth, "numberOfLikes": upVotes, "numberOfDislikes": downVotes}
 
 bottle.run(host='0.0.0.0', port=argv[1], reloader=True)
