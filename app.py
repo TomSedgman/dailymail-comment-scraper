@@ -57,16 +57,16 @@ def index():
             commentsNumber = len(jsonDataComments["payload"]["page"])
             randomCommentNumber = 0
             downVotes = int((jsonDataComments["payload"]["page"][randomCommentNumber]["voteCount"] - jsonDataComments["payload"]["page"][randomCommentNumber]["voteRating"]) * 0.5)
-            comment = {
-                    "User Name": jsonDataComments["payload"]["page"][randomCommentNumber]["userAlias"],
-                    "User Location": jsonDataComments["payload"]["page"][randomCommentNumber]["userLocation"],
-                    "Message": jsonDataComments["payload"]["page"][randomCommentNumber]["message"],
-                    "Upvotes": int(jsonDataComments["payload"]["page"][randomCommentNumber]["voteRating"] + downVotes),
-                    "Downvotes": downVotes,
-                    "Published": jsonDataComments["payload"]["page"][randomCommentNumber]["dateCreated"],
-                }
-            output = {
-                "Title": jsonDataComments["payload"]["page"][0]["assetHeadline"],
+            # comment = {
+            #         "User Name": jsonDataComments["payload"]["page"][randomCommentNumber]["userAlias"],
+            #         "User Location": jsonDataComments["payload"]["page"][randomCommentNumber]["userLocation"],
+            #         "Message": jsonDataComments["payload"]["page"][randomCommentNumber]["message"],
+            #         "Upvotes": int(jsonDataComments["payload"]["page"][randomCommentNumber]["voteRating"] + downVotes),
+            #         "Downvotes": downVotes,
+            #         "Published": jsonDataComments["payload"]["page"][randomCommentNumber]["dateCreated"],
+            #     }
+            # output = {
+            #     "Title": jsonDataComments["payload"]["page"][0]["assetHeadline"],
                 # "Comment "+randomCommentNumber+1: comment                
             }
             # while randomCommentNumber < commentsNumber:
@@ -86,7 +86,6 @@ def index():
         except:
             done += 1
             continue
-
         
     if done == maxTries:
         errorString = "Sorry, no comments - they're busy killing kittens"
@@ -94,6 +93,6 @@ def index():
 
     else:
         # Return the horrible comment
-        return json.dumps(output)
+        return json.dumps(jsonDataComments)
 
 bottle.run(host='0.0.0.0', port=argv[1], reloader=True)
