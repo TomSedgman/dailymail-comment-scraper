@@ -88,13 +88,8 @@ def index():
             jsonDataComments = get_jsonparsed_data(urlForComments)
             commentsNumber = len(jsonDataComments["payload"]["page"])
             randomCommentNumber = 0
-            output = {
-                "Title": jsonDataComments["payload"]["page"][0]["assetHeadline"]
-            }
-            while randomCommentNumber < commentsNumber:
-                # randomCommentNumber = randint(0, (commentsNumber - 1))  
-                downVotes = int((jsonDataComments["payload"]["page"][randomCommentNumber]["voteCount"] - jsonDataComments["payload"]["page"][randomCommentNumber]["voteRating"]) * 0.5)
-                comment = {
+            downVotes = int((jsonDataComments["payload"]["page"][randomCommentNumber]["voteCount"] - jsonDataComments["payload"]["page"][randomCommentNumber]["voteRating"]) * 0.5)
+            comment = {
                     "User Name": jsonDataComments["payload"]["page"][randomCommentNumber]["userAlias"],
                     "User Location": jsonDataComments["payload"]["page"][randomCommentNumber]["userLocation"],
                     "Message": jsonDataComments["payload"]["page"][randomCommentNumber]["message"],
@@ -102,9 +97,24 @@ def index():
                     "Downvotes": downVotes,
                     "Published": jsonDataComments["payload"]["page"][randomCommentNumber]["dateCreated"]
                 }
-                z = json.loads(output)
-                z.update(comment)
-                randomCommentNumber +=1
+            output = {
+                "Title": jsonDataComments["payload"]["page"][0]["assetHeadline"],
+                "Comment "+randomCommentNumber+1: comment                
+            }
+            # while randomCommentNumber < commentsNumber:
+            #     # randomCommentNumber = randint(0, (commentsNumber - 1))  
+            #     downVotes = int((jsonDataComments["payload"]["page"][randomCommentNumber]["voteCount"] - jsonDataComments["payload"]["page"][randomCommentNumber]["voteRating"]) * 0.5)
+            #     comment = {
+            #         "User Name": jsonDataComments["payload"]["page"][randomCommentNumber]["userAlias"],
+            #         "User Location": jsonDataComments["payload"]["page"][randomCommentNumber]["userLocation"],
+            #         "Message": jsonDataComments["payload"]["page"][randomCommentNumber]["message"],
+            #         "Upvotes": int(jsonDataComments["payload"]["page"][randomCommentNumber]["voteRating"] + downVotes),
+            #         "Downvotes": downVotes,
+            #         "Published": jsonDataComments["payload"]["page"][randomCommentNumber]["dateCreated"]
+            #     }
+            #     z = json.loads(output)
+            #     z.update(comment)
+            #     randomCommentNumber +=1
         except:
             done += 1
             continue
