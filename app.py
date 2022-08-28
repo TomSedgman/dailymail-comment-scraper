@@ -114,7 +114,11 @@ def index():
         break
 
     if done == maxTries:
-        errorString = "Sorry, no comments - they're busy killing kittens"
+        errorString
+        if request.query_string is None:
+            errorString = "Please enter article ID"
+        else:
+            errorString = "Sorry, no comments - they're busy killing kittens"
         return {"comment": errorString}
 
     else:
