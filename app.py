@@ -68,7 +68,7 @@ def index():
             # output = {
             #     "Title": jsonDataComments["payload"]["page"][0]["assetHeadline"],
                 # "Comment "+randomCommentNumber+1: comment                
-            }
+            # }
             # while randomCommentNumber < commentsNumber:
             #     # randomCommentNumber = randint(0, (commentsNumber - 1))  
             #     downVotes = int((jsonDataComments["payload"]["page"][randomCommentNumber]["voteCount"] - jsonDataComments["payload"]["page"][randomCommentNumber]["voteRating"]) * 0.5)
