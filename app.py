@@ -124,7 +124,7 @@ def index():
             output = {
                 "Title": jsonDataComments["payload"]["page"][0]["assetHeadline"],
                 "Total Number of Comments": commentsNumber,
-                "Comment": comment,            
+                displayCommentNumber: comment,            
             }
             commentsNumber = len(jsonDataComments["payload"]["page"])
             randomCommentNumber = randint(0, (commentsNumber - 1))
