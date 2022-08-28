@@ -129,7 +129,6 @@ def index():
 
 
             
-            commentsNumber = len(jsonDataComments["payload"]["page"])
             randomCommentNumber = randint(0, (commentsNumber - 1))
             commentBody = jsonDataComments["payload"]["page"][randomCommentNumber]["message"]
             userName = jsonDataComments["payload"]["page"][randomCommentNumber]["userAlias"]
@@ -145,7 +144,13 @@ def index():
             cleantext = re.sub(cleanr, '', raw_html)
             return cleantext
 
-        
+        try:
+            filth = cleanhtml(commentBody)+" - "+userName
+        except:
+            print ("Error parsing contet")
+            done += 1
+            continue
+        break
 
     if done == maxTries:
         errorString = "Sorry, no comments - they're busy killing kittens"
