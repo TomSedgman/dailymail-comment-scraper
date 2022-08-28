@@ -79,7 +79,7 @@ def index():
 
         # Build the URL to return the 'Best Rated' comments for the random story
         try:
-            urlForComments = "http://www.dailymail.co.uk/reader-comments/p/asset/readcomments/"+request.query_string+"?max=20000&sort=voteRating&order=desc"
+            urlForComments = "http://www.dailymail.co.uk/reader-comments/p/asset/readcomments/"+request.query_string+"?max=1000&sort=voteRating&order=desc"
         except:
             done += 1
 
