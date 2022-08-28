@@ -93,6 +93,6 @@ def index():
 
     else:
         # Return the horrible comment
-        return json.dumps(jsonDataComments)
+        return jsonDataComments
 
 bottle.run(host='0.0.0.0', port=argv[1], reloader=True)
