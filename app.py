@@ -95,11 +95,11 @@ def index():
                     "Message": jsonDataComments["payload"]["page"][randomCommentNumber]["message"],
                     "Upvotes": int(jsonDataComments["payload"]["page"][randomCommentNumber]["voteRating"] + downVotes),
                     "Downvotes": downVotes,
-                    "Published": jsonDataComments["payload"]["page"][randomCommentNumber]["dateCreated"]
+                    "Published": jsonDataComments["payload"]["page"][randomCommentNumber]["dateCreated"],
                 }
             output = {
                 "Title": jsonDataComments["payload"]["page"][0]["assetHeadline"],
-                "Comment "+randomCommentNumber+1: comment                
+                # "Comment "+randomCommentNumber+1: comment                
             }
             # while randomCommentNumber < commentsNumber:
             #     # randomCommentNumber = randint(0, (commentsNumber - 1))  
