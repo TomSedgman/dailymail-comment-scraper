@@ -145,13 +145,7 @@ def index():
             cleantext = re.sub(cleanr, '', raw_html)
             return cleantext
 
-        try:
-            filth = cleanhtml(commentBody)+" - "+userName
-        except:
-            print ("Error parsing contet")
-            done += 1
-            continue
-        break
+        
 
     if done == maxTries:
         errorString = "Sorry, no comments - they're busy killing kittens"
