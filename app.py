@@ -128,10 +128,32 @@ def index():
             }
 
 
+            
+            commentsNumber = len(jsonDataComments["payload"]["page"])
+            randomCommentNumber = randint(0, (commentsNumber - 1))
+            commentBody = jsonDataComments["payload"]["page"][randomCommentNumber]["message"]
+            userName = jsonDataComments["payload"]["page"][randomCommentNumber]["userAlias"]
+            downVotes = int((jsonDataComments["payload"]["page"][randomCommentNumber]["voteCount"] -
+                             jsonDataComments["payload"]["page"][randomCommentNumber]["voteRating"]) * 0.5)
+
         except:
             done += 1
             continue
 
+        # Strip out html tags
+        def cleanhtml(raw_html):
+
+            cleanr = re.compile('<.*?>')
+            cleantext = re.sub(cleanr, '', raw_html)
+            return cleantext
+
+        try:
+            filth = cleanhtml(commentBody)+" - "+userName
+        except:
+            print ("Error parsing contet")
+            done += 1
+            continue
+        break
 
     if done == maxTries:
         errorString = "Sorry, no comments - they're busy killing kittens"
