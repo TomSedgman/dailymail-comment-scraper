@@ -140,7 +140,7 @@ def index():
 
     else:
         # Return the horrible comment
-        return json.dumps(comment)
+        return json.dumps(output)
         # return {"storyTitle": shortStoryURL, "": userName, "comment": filth, "numberOfLikes": upVotes, "numberOfDislikes": downVotes}
 
 bottle.run(host='0.0.0.0', port=argv[1], reloader=True)
