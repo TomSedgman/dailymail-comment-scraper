@@ -17,6 +17,7 @@ import simplejson as json
 import bottle
 from bottle import default_app, request, route, response, get
 from random import randint
+import csv
 
 bottle.debug(True)
 
@@ -108,33 +109,23 @@ def index():
         # Get comment and metadata
         try:
             jsonDataComments = get_jsonparsed_data(urlForComments)
+            filename = jsonDataComments["payload"]["page"][0]["assetHeadline"]
+            fields = ["User Name", "User Location","Message","Upvotes","Downvotes","Published","Comment"]
             commentsNumber = len(jsonDataComments["payload"]["page"])
             randomCommentNumber = 0
             
-            output = {
-                "Title": jsonDataComments["payload"]["page"][0]["assetHeadline"],
-                "Total Number of Comments": commentsNumber,
-                # randomCommentNumber: comment,            
-            }
+            f = open(filename,'w')
+            writer = csv.writer(f)
+            writer.writerow(fields) 
 
             while randomCommentNumber < commentsNumber:
-                displayCommentNumber = randomCommentNumber + 1
+                
                 downVotes = int((jsonDataComments["payload"]["page"][randomCommentNumber]["voteCount"] - jsonDataComments["payload"]["page"][randomCommentNumber]["voteRating"]) * 0.5)
-                comment = {
-                        "User Name": jsonDataComments["payload"]["page"][randomCommentNumber]["userAlias"],
-                        "User Location": jsonDataComments["payload"]["page"][randomCommentNumber]["userLocation"],
-                        "Message": jsonDataComments["payload"]["page"][randomCommentNumber]["message"],
-                        "Upvotes": int(jsonDataComments["payload"]["page"][randomCommentNumber]["voteRating"] + downVotes),
-                        "Downvotes": downVotes,
-                        "Published": jsonDataComments["payload"]["page"][randomCommentNumber]["dateCreated"],
-                        "Comment": displayCommentNumber
-                }
-
-                z = json.loads(output)
-
-                z.update(comment)
+                row = [jsonDataComments["payload"]["page"][randomCommentNumber]["userAlias"],jsonDataComments["payload"]["page"][randomCommentNumber]["userLocation"],jsonDataComments["payload"]["page"][randomCommentNumber]["message"],int(jsonDataComments["payload"]["page"][randomCommentNumber]["voteRating"] + downVotes),downVotes,jsonDataComments["payload"]["page"][randomCommentNumber]["dateCreated"]]
+                writer.writerow(row)
                 randomCommentNumber +=1
             
+            f.close()
             commentBody = jsonDataComments["payload"]["page"][randomCommentNumber]["message"]
             userName = jsonDataComments["payload"]["page"][randomCommentNumber]["userAlias"]
             
@@ -163,6 +154,6 @@ def index():
 
     else:
         # Return the horrible comment
-        return output
+        return jsonDataComments
 
 bottle.run(host='0.0.0.0', port=argv[1], reloader=True)
