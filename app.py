@@ -110,7 +110,8 @@ def index():
             jsonDataComments = get_jsonparsed_data(urlForComments)
             commentsNumber = len(jsonDataComments["payload"]["page"])
             randomCommentNumber = 0
-            commentOfMax = "Comment " + randomCommentNumber+1 + " of " + commentsNumber
+            displayCommentNumber = randomCommentNumber + 1
+            commentOfMax = "Comment " + displayCommentNumber + " of " + commentsNumber
             downVotes = int((jsonDataComments["payload"]["page"][randomCommentNumber]["voteCount"] - jsonDataComments["payload"]["page"][randomCommentNumber]["voteRating"]) * 0.5)
             comment = {
                     "User Name": jsonDataComments["payload"]["page"][randomCommentNumber]["userAlias"],
