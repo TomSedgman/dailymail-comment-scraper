@@ -111,7 +111,6 @@ def index():
             commentsNumber = len(jsonDataComments["payload"]["page"])
             randomCommentNumber = 0
             displayCommentNumber = randomCommentNumber + 1
-            # commentOfMax = "Comment " + displayCommentNumber + " of " + commentsNumber
             downVotes = int((jsonDataComments["payload"]["page"][randomCommentNumber]["voteCount"] - jsonDataComments["payload"]["page"][randomCommentNumber]["voteRating"]) * 0.5)
             comment = {
                     "User Name": jsonDataComments["payload"]["page"][randomCommentNumber]["userAlias"],
@@ -124,7 +123,8 @@ def index():
                 }
             output = {
                 "Title": jsonDataComments["payload"]["page"][0]["assetHeadline"],
-                "Comment "+displayCommentNumber: comment                
+                "Total Number of Comments": commentsNumber,
+                "Comment": comment,            
             }
             commentsNumber = len(jsonDataComments["payload"]["page"])
             randomCommentNumber = randint(0, (commentsNumber - 1))
