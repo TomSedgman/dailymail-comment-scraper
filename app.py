@@ -112,11 +112,12 @@ def index():
             randomCommentNumber = 0
             displayCommentNumber = randomCommentNumber + 1
             downVotes = int((jsonDataComments["payload"]["page"][randomCommentNumber]["voteCount"] - jsonDataComments["payload"]["page"][randomCommentNumber]["voteRating"]) * 0.5)
+            upVotes = int(jsonDataComments["payload"]["page"][randomCommentNumber]["voteRating"] + downVotes)
             comment = {
                     "User Name": jsonDataComments["payload"]["page"][randomCommentNumber]["userAlias"],
                     "User Location": jsonDataComments["payload"]["page"][randomCommentNumber]["userLocation"],
-                    "Message": jsonDataComments["payload"]["page"][randomCommentNumber]["message"],
-                    "Upvotes": int(jsonDataComments["payload"]["page"][randomCommentNumber]["voteRating"] + downVotes),
+                    "Comment": jsonDataComments["payload"]["page"][randomCommentNumber]["message"],
+                    "Upvotes": upVotes,
                     "Downvotes": downVotes,
                     "Published": jsonDataComments["payload"]["page"][randomCommentNumber]["dateCreated"],
                     "Comment": displayCommentNumber,
@@ -126,25 +127,9 @@ def index():
                 "Total Number of Comments": commentsNumber,
                 displayCommentNumber: comment,            
             }
-
         except:
             done += 1
             continue
-
-        # Strip out html tags
-        def cleanhtml(raw_html):
-
-            cleanr = re.compile('<.*?>')
-            cleantext = re.sub(cleanr, '', raw_html)
-            return cleantext
-
-        try:
-            filth = cleanhtml(commentBody)+" - "+userName
-        except:
-            print ("Error parsing contet")
-            done += 1
-            continue
-        break
 
     if done == maxTries:
         errorString = "Sorry, no comments - they're busy killing kittens"
