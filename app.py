@@ -129,7 +129,6 @@ def index():
 
 
             
-            randomCommentNumber = randint(0, (commentsNumber - 1))
             commentBody = jsonDataComments["payload"]["page"][randomCommentNumber]["message"]
             userName = jsonDataComments["payload"]["page"][randomCommentNumber]["userAlias"]
             
